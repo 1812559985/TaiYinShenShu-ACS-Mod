@@ -207,6 +207,10 @@ function tbSkill:SummonXinMoHuaXing(target, caster)
             end);
         end
         
+        -- 尝试复制目标的技能和法宝（增强心魔战斗力）
+        self:CopyTargetSkillsToXinMo(target, xinmo);
+        self:CopyTargetFabaoToXinMo(target, xinmo);
+        
         -- 播放心魔化形特效
         WorldLua:PlayEffect("Effect/A/Prefabs/Beams/Impact/ShadowBeamImpact", xinmo.Pos, 5);
         WorldLua:CameraShake(1, 0.5);
@@ -223,6 +227,98 @@ function tbSkill:SummonXinMoHuaXing(target, caster)
         
         WorldLua:AddMsg(XT(string.format("[color=#FF0000]心魔化形[/color]在[color=#FF6347]%s[/color]身边凝聚成形，开始无止休攻击！",
             target.Name)));
+    end
+end
+
+-- 复制目标的技能给心魔
+function tbSkill:CopyTargetSkillsToXinMo(target, xinmo)
+    if target == nil or xinmo == nil then
+        return;
+    end
+    
+    -- 尝试复制目标的功法/技能
+    local ok, targetSkills = pcall(function()
+        if target.PropertyMgr ~= nil and target.PropertyMgr.Skills ~= nil then
+            return target.PropertyMgr.Skills;
+        end
+        return nil;
+    end);
+    
+    if ok and targetSkills ~= nil then
+        pcall(function()
+            for i = 0, targetSkills.Count - 1, 1 do
+                local skill = targetSkills[i];
+                if skill ~= nil and skill.Name ~= nil then
+                    pcall(function()
+                        if xinmo.PropertyMgr ~= nil then
+                            xinmo.PropertyMgr:LearnSkill(skill.Name);
+                        end
+                    end);
+                end
+            end
+        end);
+    end
+    
+    -- 尝试复制术法技能
+    local ok2, targetFightSkills = pcall(function()
+        if target.PropertyMgr ~= nil and target.PropertyMgr.FightSkills ~= nil then
+            return target.PropertyMgr.FightSkills;
+        end
+        return nil;
+    end);
+    
+    if ok2 and targetFightSkills ~= nil then
+        pcall(function()
+            for i = 0, targetFightSkills.Count - 1, 1 do
+                local skill = targetFightSkills[i];
+                if skill ~= nil and skill.Name ~= nil then
+                    pcall(function()
+                        if xinmo.PropertyMgr ~= nil then
+                            xinmo.PropertyMgr:LearnSkill(skill.Name);
+                        end
+                    end);
+                end
+            end
+        end);
+    end
+end
+
+-- 复制目标的法宝给心魔
+function tbSkill:CopyTargetFabaoToXinMo(target, xinmo)
+    if target == nil or xinmo == nil or target.Equip == nil or xinmo.Equip == nil then
+        return;
+    end
+    
+    -- 获取目标的法宝列表
+    local ok, targetFabaos = pcall(function()
+        return target.Equip:FindFabao(nil);
+    end);
+    
+    if ok and targetFabaos ~= nil then
+        local copyCount = 0;
+        for i = 0, targetFabaos.Count - 1, 1 do
+            if copyCount >= 3 then
+                break; -- 最多复制3个法宝
+            end
+            local fabao = targetFabaos[i];
+            if fabao ~= nil then
+                -- 尝试创建法宝并装备给心魔
+                pcall(function()
+                    local newFabao = ThingMgr:CreateThing(fabao.defName);
+                    if newFabao ~= nil then
+                        if fabao.Rate ~= nil then
+                            newFabao.Rate = fabao.Rate;
+                        end
+                        if fabao.MaxLing ~= nil and fabao.MaxLing > 0 then
+                            newFabao.MaxLing = fabao.MaxLing;
+                            newFabao:AddLing(newFabao.MaxLing);
+                        end
+                        xinmo.Equip:AddEquip(newFabao);
+                        copyCount = copyCount + 1;
+                    end
+                end);
+            end
+        end
     end
 end
 
