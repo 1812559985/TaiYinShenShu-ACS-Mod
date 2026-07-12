@@ -31,19 +31,55 @@ function tbMod:OnStep(dt)
             if xinmo == nil or xinmo.IsDeath then
                 -- 心魔已死亡或被移除
                 table.remove(self.xinmoList, i);
-            elseif target == nil or target.IsDeath then
-                -- 目标死亡，移除心魔
+            elseif target == nil then
+                -- 目标已逃离此图（ThingMgr跨地图查找返回nil），启动计时器
+                data.leaveTimer = (data.leaveTimer or 0) + dt;
+                if data.leaveTimer > 60 then
+                    -- 超过60秒仍未找到目标，心魔自行消散
+                    if xinmo ~= nil and not xinmo.IsDeath then
+                        WorldLua:AddMsg(XT("目标已逃离，[color=#FF0000]心魔化形[/color]消散于天地之间..."));
+                        local ok = pcall(function()
+                            xinmo:Die();
+                        end);
+                        if not ok then
+                            pcall(function()
+                                xinmo.IsDeath = true;
+                            end);
+                        end
+                    end
+                    table.remove(self.xinmoList, i);
+                end
+            elseif target.IsDeath then
+                -- 目标已死亡，移除心魔
                 if xinmo ~= nil and not xinmo.IsDeath then
                     local ok = pcall(function()
                         xinmo:Die();
                     end);
                     if not ok then
-                        local ok2 = pcall(function()
+                        pcall(function()
                             xinmo.IsDeath = true;
                         end);
                     end
                 end
                 table.remove(self.xinmoList, i);
+            else
+                -- 目标仍在，重置逃离计时器
+                data.leaveTimer = 0;
+                
+                -- 确保心魔与目标在同一地图
+                local ok1, xinmoMap = pcall(function() return xinmo.Map end);
+                local ok2, targetMap = pcall(function() return target.Map end);
+                if ok1 and ok2 and xinmoMap ~= nil and targetMap ~= nil and xinmoMap ~= targetMap then
+                    -- 目标已切换地图，启动计时器
+                    data.leaveTimer = (data.leaveTimer or 0) + dt;
+                    if data.leaveTimer > 60 then
+                        if xinmo ~= nil and not xinmo.IsDeath then
+                            WorldLua:AddMsg(XT("目标已逃离此图，[color=#FF0000]心魔化形[/color]消散于天地之间..."));
+                            pcall(function() xinmo:Die(); end);
+                        end
+                        table.remove(self.xinmoList, i);
+                    end
+                end
             end
         end
     end
