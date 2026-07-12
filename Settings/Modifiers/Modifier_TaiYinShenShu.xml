@@ -1,0 +1,74 @@
+<ModifierDefs><List>
+    <!-- 太阴之息：每次命中叠加，最多50层，永久持续时间 -->
+    <Modifier Name="Modifier_TaiYinShenShu_Breath" Type="Normal">
+        <DisplayName>太阴之息</DisplayName>
+        <Desc>被太阴神术击中，身上积累了太阴之息。每层降低2点心境。当叠加至50层时，将触发心魔化形。</Desc>
+        <MaxStack>50</MaxStack>
+        <Duration>-1</Duration>
+        <Display>1</Display>
+        <Sync>1</Sync>
+        <Properties>
+            <li Name="MindStateBaseValue" AddV="-2"/>
+        </Properties>
+        <EffectBind>
+            <li Path="Effect/System/YehuoSmoke"/>
+        </EffectBind>
+    </Modifier>
+
+    <!-- 金属性内伤 -->
+    <Modifier Name="Modifier_TaiYinShenShu_MetalInjury" Type="Normal">
+        <DisplayName>金行内伤</DisplayName>
+        <Desc>被太阴神术的金行之力侵蚀，金属性抗性大幅降低，体内灵气运转受阻。</Desc>
+        <MaxStack>1</MaxStack>
+        <Duration>60</Duration>
+        <Display>1</Display>
+        <Sync>1</Sync>
+        <Properties>
+            <li Name="NpcFight_ShieldResistanceToJin" AddV="-1.5"/>
+            <li Name="NpcFight_ShieldConversionRateAddP" AddV="-30"/>
+        </Properties>
+        <EffectBind>
+            <li Path="Effect\A\Prefabs\Aura\SpinningAura\SpinningWater" Bip="Dummy001"/>
+        </EffectBind>
+    </Modifier>
+
+    <!-- 水属性内伤 -->
+    <Modifier Name="Modifier_TaiYinShenShu_WaterInjury" Type="Normal">
+        <DisplayName>水行内伤</DisplayName>
+        <Desc>被太阴神术的水行之力侵蚀，水属性抗性大幅降低，体内灵气运转受阻。</Desc>
+        <MaxStack>1</MaxStack>
+        <Duration>60</Duration>
+        <Display>1</Display>
+        <Sync>1</Sync>
+        <Properties>
+            <li Name="NpcFight_ShieldResistanceToShui" AddV="-1.5"/>
+            <li Name="NpcFight_ShieldConversionRateAddP" AddV="-30"/>
+        </Properties>
+        <EffectBind>
+            <li Path="Effect\A\Prefabs\Aura\SpinningAura\SpinningWater" Bip="Dummy001"/>
+        </EffectBind>
+    </Modifier>
+
+    <!-- 暴走重伤：强制昏迷、沉默、禁用法宝 -->
+    <Modifier Name="Modifier_TaiYinShenShu_Rampage" Type="Normal">
+        <DisplayName>太阴暴走</DisplayName>
+        <Desc>心境崩溃，被太阴之力暴走重伤，陷入昏迷无法行动，法宝被封禁，装备掉落。</Desc>
+        <MaxStack>1</MaxStack>
+        <Duration>30</Duration>
+        <Display>1</Display>
+        <Sync>1</Sync>
+        <Properties>
+            <li Name="NpcFight_ShieldConversionRateAddP" AddV="-50"/>
+            <li Name="NpcFight_SpellPowerAddP" AddV="-50"/>
+            <li Name="NpcFight_FabaoPowerAddP" AddV="-50"/>
+        </Properties>
+        <SpecialFlags>
+            <li>FLAG_MINDHOLD</li>
+            <li>FLAG_SILENT</li>
+            <li>FLAG_FORBID_FABAO</li>
+        </SpecialFlags>
+        <EffectBind>
+            <li Path="Effect/A/Prefabs/Beams/Impact/ShadowBeamImpact" Bip="Dummy001"/>
+        </EffectBind>
+    </Modifier>
+</List></ModifierDefs>

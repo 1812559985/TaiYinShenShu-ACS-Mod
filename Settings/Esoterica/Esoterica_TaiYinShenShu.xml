@@ -1,0 +1,22 @@
+<Esotericas><List>
+    <Esoterica Name="FightSkillEsoterica_TaiYinShenShu">
+        <DisplayName>太阴神术</DisplayName>
+        <Icon>res/Sprs/ui/icon_shufa</Icon>
+        <StarLevel>5</StarLevel>
+        <Difficulty>5</Difficulty>
+        <Desc>元神期可修习的阴行术法秘典。源自烛龙阴形态，向当前目标释放一道黑色光束，射程无限，锁敌跟踪，速度极快。对五行属阴（金、水）的目标造成2倍伤害，对五行属阳（火、木）的目标造成正常伤害，对土属性和无属性的目标造成0.5倍伤害。每次命中叠加1层太阴之息并附加金属性或水属性内伤，强制降低目标心境。心境低于50时触发暴走重伤（造成10%最大生命值的无视灵气护盾伤害，强制昏迷、沉默、禁用法宝、装备掉落）。太阴之息达到50层时触发心魔化形，在目标身边生成一个黑色幻影实体，无止休攻击目标，直至目标或心魔死亡。心魔化形的强度与目标境界成正比，境界越高，心魔越强，使用的法宝越多。</Desc>
+        <GLevel>YuanShen</GLevel>
+        <Element>None</Element>
+        <Type>Skill</Type>
+        <EffectDesc>[size=10][color=#FFFFFF]习得术法：太阴神术[/color][/size]
+[size=9][color=#2F2F2F]向目标释放黑色光束，造成1000点伤害，射程无限，锁敌跟踪，速度极快[/color][/size]
+[size=9][color=#4169E1]对五行属阴（金、水）目标+2倍伤害[/color][/size]
+[size=9][color=#FF6347]对土属性和无属性目标-0.5倍伤害[/color][/size]
+[size=9][color=#9932CC]每次命中叠加太阴之息，附加金属性或水属性内伤，强制降低2点心境[/color][/size]
+[size=9][color=#FF0000]心境低于50时触发暴走重伤（10%最大生命值无视护盾，强制昏迷、沉默、禁用法宝、装备掉落）[/color][/size]
+[size=9][color=#8B0000]太阴之息50层触发心魔化形，无止休攻击目标，境界越高心魔越强[/color][/size]</EffectDesc>
+        <Skills>
+            <li>DamageSkill_TaiYinShenShu</li>
+        </Skills>
+    </Esoterica>
+</List></Esotericas>
